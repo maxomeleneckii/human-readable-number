@@ -1,5 +1,6 @@
 module.exports = function toReadable(number) {
-    const numb = {
+    const num = {
+        0: "zero",
         1: "one",
         2: "two",
         3: "three",
@@ -27,21 +28,23 @@ module.exports = function toReadable(number) {
         70: "seventy",
         80: "eighty",
         90: "ninety",
-        0: "zero",
     };
 
-    if (number === 0) {
-        return 'zero';
-    }
     if (number < 100) {
-        if (number < 20 || number % 10 == 0) {
-            return (numb[number]);
+        if (number < 20 || number % 10 === 0) {
+            return num[number];
         } else {
-            return (numb[Math.floor(number / 10) * 10] + " " + numb[number.toString().slice(-1)]);
+            return num[number - number.toString().slice(-1)] + ' ' + num[number.toString().slice(-1)];
         }
-    } else if (number % 100 !== 0) {
-        return (numb[Math.floor(number / 100)] + " hundred " + toReadable(parseInt(number.toString().slice(-2))));
     } else {
-        return (numb[(number / 100)] + " hundred");
+        if (number.toString().slice(-2) < 20 && +number.toString().slice(-2) !== 0 && number.toString().slice(-2) % 10) {
+            return num[number.toString()[0]] + ' hundred ' + num[(number - (number.toString()[0] * 100))];
+        } else if (number.toString().slice(-2) % 10 === 0 && +number.toString().slice(-2) !== 0) {
+            return num[number.toString()[0]] + ' hundred ' + num[(number - (number.toString()[0] * 100))];
+        } else if (number % 100 === 0) {
+            return num[number.toString()[0]] + ' hundred';
+        } else {
+            return num[number.toString()[0]] + ' hundred ' + num[number.toString().slice(-2) - number.toString().slice(-1)] + ' ' + num[number.toString().slice(-1)];
+        }
     }
-}
+};
